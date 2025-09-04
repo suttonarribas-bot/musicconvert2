@@ -1,23 +1,11 @@
 [build]
-  command = "echo 'Building Music Converter...'"
-  publish = "."
+  command = "npm install && npm run build"
+  publish = "dist"
 
 [[redirects]]
-  from = "/"
-  to = "/converter.html"
-  status = 200
-
-[[redirects]]
-  from = "/app"
-  to = "/converter.html"
-  status = 200
-
-[[redirects]]
-  from = "/convert"
-  to = "/converter.html"
-  status = 200
-
-[[redirects]]
-  from = "/index"
+  from = "/*"
   to = "/index.html"
   status = 200
+
+[build.environment]
+  NODE_VERSION = "18"

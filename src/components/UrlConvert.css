@@ -1,0 +1,127 @@
+.url-convert {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.url-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: #fff;
+}
+
+.url-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.url-input.error {
+  border-color: #e74c3c;
+}
+
+.url-input:disabled {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+}
+
+.validation-status {
+  margin-top: 1rem;
+}
+
+.file-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #28a745;
+}
+
+.file-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-type,
+.file-size {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.file-type {
+  font-weight: 500;
+}
+
+.conversion-progress {
+  margin: 1.5rem 0;
+}
+
+.error-message {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  color: #721c24;
+  font-size: 0.9rem;
+}
+
+.convert-button {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 1rem;
+}
+
+.convert-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.convert-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.help-text {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #666;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .url-convert {
+    padding: 0 1rem;
+  }
+  
+  .file-details {
+    flex-direction: column;
+  }
+}
