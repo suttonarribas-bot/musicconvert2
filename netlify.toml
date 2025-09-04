@@ -1,8 +1,18 @@
 [build]
-  command = "chmod +x build.sh && ./build.sh"
+  command = "echo 'Building Music Converter...'"
   publish = "."
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/"
+  to = "/converter.html"
+  status = 200
+
+[[redirects]]
+  from = "/app"
+  to = "/converter.html"
+  status = 200
+
+[[redirects]]
+  from = "/convert"
+  to = "/converter.html"
   status = 200
