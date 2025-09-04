@@ -1,16 +1,8 @@
 [build]
-  command = "pip install -r requirements-web.txt && python web_app.py"
-  functions = "netlify/functions"
+  command = "chmod +x build.sh && ./build.sh"
   publish = "."
-
-[build.environment]
-  PYTHON_VERSION = "3.9"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
-[dev]
-  command = "python web_app.py"
-  port = 5000
