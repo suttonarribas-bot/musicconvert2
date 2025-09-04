@@ -16,3 +16,8 @@
   from = "/convert"
   to = "/converter.html"
   status = 200
+
+[[redirects]]
+  from = "/index"
+  to = "/index.html"
+  status = 200

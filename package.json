@@ -1,0 +1,23 @@
+{
+  "name": "music-converter",
+  "version": "1.0.0",
+  "description": "Music Converter - Download and convert music from various platforms",
+  "main": "converter.html",
+  "scripts": {
+    "build": "echo 'Building Music Converter...'",
+    "start": "echo 'Music Converter is ready!'"
+  },
+  "keywords": [
+    "music",
+    "converter",
+    "youtube",
+    "audio",
+    "download"
+  ],
+  "author": "suttonarribas-bot",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/suttonarribas-bot/musicconvert2"
+  }
+}
