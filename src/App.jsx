@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { UrlConvert } from './components/UrlConvert';
 import { UploadConvert } from './components/UploadConvert';
+import { StreamingConverter } from './components/StreamingConverter';
 import { MetadataPanel } from './components/MetadataPanel';
 import { ResultPanel } from './components/ResultPanel';
 import { checkBrowserSupport } from './lib/utils';
 import './App.css';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('url');
+  const [activeTab, setActiveTab] = useState('streaming');
   const [result, setResult] = useState(null);
   const [browserSupport, setBrowserSupport] = useState({ supported: true, issues: [] });
 
@@ -82,12 +83,20 @@ function App() {
 
         <div className="tabs">
           <button
+            className={`tab ${activeTab === 'streaming' ? 'active' : ''}`}
+            onClick={() => setActiveTab('streaming')}
+            aria-selected={activeTab === 'streaming'}
+            role="tab"
+          >
+            Streaming Services
+          </button>
+          <button
             className={`tab ${activeTab === 'url' ? 'active' : ''}`}
             onClick={() => setActiveTab('url')}
             aria-selected={activeTab === 'url'}
             role="tab"
           >
-            Convert from URL
+            Direct URL
           </button>
           <button
             className={`tab ${activeTab === 'upload' ? 'active' : ''}`}
@@ -108,6 +117,12 @@ function App() {
         </div>
 
         <div className="tab-content">
+          {activeTab === 'streaming' && (
+            <div role="tabpanel" aria-labelledby="streaming-tab">
+              <StreamingConverter onResult={handleResult} />
+            </div>
+          )}
+          
           {activeTab === 'url' && (
             <div role="tabpanel" aria-labelledby="url-tab">
               <UrlConvert onResult={handleResult} />
