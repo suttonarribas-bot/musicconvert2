@@ -41,6 +41,21 @@ function App() {
                 <li key={index}>{issue}</li>
               ))}
             </ul>
+            
+            {browserSupport.issues.some(issue => issue.includes('SharedArrayBuffer')) && (
+              <div className="sab-solution">
+                <h3>Solution for SharedArrayBuffer Issue:</h3>
+                <p>This is a security feature in modern browsers. The site needs to be served with special headers:</p>
+                <ol>
+                  <li>Try refreshing the page (headers may have been updated)</li>
+                  <li>Use Chrome/Edge with the <code>--disable-web-security</code> flag for testing</li>
+                  <li>Access the site via HTTPS (required for SharedArrayBuffer)</li>
+                  <li>Try a different browser or incognito mode</li>
+                </ol>
+                <p><strong>Note:</strong> The site administrator needs to configure proper CORS headers for full functionality.</p>
+              </div>
+            )}
+            
             <p>
               Please use a modern browser like Chrome, Firefox, Safari, or Edge 
               with the latest updates.

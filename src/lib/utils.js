@@ -120,8 +120,14 @@ export function checkBrowserSupport() {
     issues.push('WebAssembly is not supported');
   }
   
+  // Check for SharedArrayBuffer with proper headers
   if (!window.SharedArrayBuffer) {
-    issues.push('SharedArrayBuffer is not supported (required for ffmpeg.wasm)');
+    // Try to enable SharedArrayBuffer by setting proper headers
+    if (window.crossOriginIsolated === false) {
+      issues.push('SharedArrayBuffer requires Cross-Origin-Embedder-Policy and Cross-Origin-Opener-Policy headers');
+    } else {
+      issues.push('SharedArrayBuffer is not supported (required for ffmpeg.wasm)');
+    }
   }
   
   if (!window.fetch) {

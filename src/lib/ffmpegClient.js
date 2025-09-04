@@ -28,6 +28,11 @@ class FFmpegClient {
     this.loading = true;
     
     try {
+      // Check for SharedArrayBuffer support
+      if (!window.SharedArrayBuffer) {
+        throw new Error('SharedArrayBuffer is required for ffmpeg.wasm. Please ensure your site has the proper CORS headers (Cross-Origin-Embedder-Policy: require-corp and Cross-Origin-Opener-Policy: same-origin).');
+      }
+
       // Use CDN for ffmpeg.wasm assets
       const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
       
