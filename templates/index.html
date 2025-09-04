@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Converter - Web Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="url"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="url"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .convert-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .convert-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .convert-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e1e5e9;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .status-message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .status-processing {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-completed {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .status-failed {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .download-btn {
+            display: none;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .supported-platforms {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .supported-platforms h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .platforms {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .platform {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .platform.supported {
+            color: #2e7d32;
+        }
+
+        .platform.limited {
+            color: #f57c00;
+        }
+
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Music Converter</h1>
+            <p>Convert music from various platforms to high-quality audio files</p>
+        </div>
+
+        <form id="converterForm">
+            <div class="form-group">
+                <label for="url">Music URL:</label>
+                <input type="url" id="url" name="url" placeholder="https://www.youtube.com/watch?v=..." required>
+            </div>
+
+            <div class="options">
+                <div class="form-group">
+                    <label for="format">Output Format:</label>
+                    <select id="format" name="format">
+                        <option value="wav">WAV (Uncompressed)</option>
+                        <option value="aiff">AIFF (Apple Format)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="quality">Audio Quality:</label>
+                    <select id="quality" name="quality">
+                        <option value="best">Best (320 kbps)</option>
+                        <option value="high">High (192 kbps)</option>
+                        <option value="medium">Medium (128 kbps)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="convert-btn" id="convertBtn">
+                Convert Music
+            </button>
+        </form>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="status-message" id="statusMessage"></div>
+            <button class="download-btn" id="downloadBtn" style="display: none;">
+                Download File
+            </button>
+        </div>
+
+        <div class="supported-platforms">
+            <h3>Supported Platforms</h3>
+            <div class="platforms">
+                <div class="platform supported">✅ YouTube</div>
+                <div class="platform supported">✅ SoundCloud</div>
+                <div class="platform limited">⚠️ Spotify</div>
+                <div class="platform limited">⚠️ Apple Music</div>
+            </div>
+        </div>
+
+        <div class="warning">
+            <strong>Note:</strong> This is a web version with limited functionality. For full features including batch processing and advanced options, please download the desktop version from the GitHub repository.
+        </div>
+    </div>
+
+    <script>
+        let currentJobId = null;
+        let statusInterval = null;
+
+        document.getElementById('converterForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const url = document.getElementById('url').value;
+            const format = document.getElementById('format').value;
+            const quality = document.getElementById('quality').value;
+            
+            const convertBtn = document.getElementById('convertBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const statusMessage = document.getElementById('statusMessage');
+            const progressFill = document.getElementById('progressFill');
+            
+            // Reset UI
+            convertBtn.disabled = true;
+            convertBtn.textContent = 'Converting...';
+            progressContainer.style.display = 'block';
+            statusMessage.className = 'status-message status-processing';
+            statusMessage.textContent = 'Starting conversion...';
+            progressFill.style.width = '0%';
+            
+            try {
+                const response = await fetch('/convert', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url, format, quality })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    currentJobId = data.job_id;
+                    startStatusPolling();
+                } else {
+                    throw new Error(data.error || 'Conversion failed');
+                }
+            } catch (error) {
+                statusMessage.className = 'status-message status-failed';
+                statusMessage.textContent = `Error: ${error.message}`;
+                convertBtn.disabled = false;
+                convertBtn.textContent = 'Convert Music';
+            }
+        });
+
+        function startStatusPolling() {
+            statusInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`/status/${currentJobId}`);
+                    const data = await response.json();
+                    
+                    const statusMessage = document.getElementById('statusMessage');
+                    const progressFill = document.getElementById('progressFill');
+                    const downloadBtn = document.getElementById('downloadBtn');
+                    const convertBtn = document.getElementById('convertBtn');
+                    
+                    statusMessage.textContent = data.message;
+                    progressFill.style.width = `${data.progress}%`;
+                    
+                    if (data.status === 'completed') {
+                        statusMessage.className = 'status-message status-completed';
+                        downloadBtn.style.display = 'block';
+                        downloadBtn.onclick = () => {
+                            window.open(`/download/${currentJobId}`, '_blank');
+                        };
+                        convertBtn.disabled = false;
+                        convertBtn.textContent = 'Convert Music';
+                        clearInterval(statusInterval);
+                    } else if (data.status === 'failed') {
+                        statusMessage.className = 'status-message status-failed';
+                        convertBtn.disabled = false;
+                        convertBtn.textContent = 'Convert Music';
+                        clearInterval(statusInterval);
+                    } else {
+                        statusMessage.className = 'status-message status-processing';
+                    }
+                } catch (error) {
+                    console.error('Status polling error:', error);
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
