@@ -1,0 +1,5 @@
+yt-dlp>=2023.12.30
+pydub>=0.25.1
+requests>=2.31.0
+tkinter
+Pillow>=10.0.0

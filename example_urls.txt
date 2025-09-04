@@ -1,0 +1,15 @@
+# Example URLs for batch processing
+# Lines starting with # are comments and will be ignored
+
+# YouTube examples
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
+https://youtu.be/dQw4w9WgXcQ
+
+# SoundCloud examples (replace with actual URLs)
+# https://soundcloud.com/artist/track-name
+
+# Spotify examples (will search YouTube for the track)
+# https://open.spotify.com/track/4iV5W9uYEdYUVa79Axb7Rh
+
+# Apple Music examples (will search YouTube for the track)
+# https://music.apple.com/us/album/song-name/1234567890

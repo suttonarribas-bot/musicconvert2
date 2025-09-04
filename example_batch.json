@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "name": "My Music Collection",
+    "description": "Example batch processing file",
+    "created": "2024-01-01"
+  },
+  "urls": [
+    {
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "title": "Never Gonna Give You Up",
+      "artist": "Rick Astley",
+      "notes": "Classic 80s hit"
+    },
+    {
+      "url": "https://youtu.be/dQw4w9WgXcQ",
+      "title": "Another Rick Roll",
+      "artist": "Rick Astley",
+      "notes": "Same song, different URL format"
+    }
+  ]
+}
