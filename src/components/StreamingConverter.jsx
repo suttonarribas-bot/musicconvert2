@@ -28,43 +28,120 @@ export function StreamingConverter({ onResult }) {
     setError(null);
 
     try {
-      // Check if it's a blocked domain
-      if (isBlockedDomain(url)) {
-        // Try to call the Netlify function for more detailed response
-        try {
-          const response = await fetch('/.netlify/functions/streaming-convert', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-              url, 
-              service: getServiceFromUrl(url) 
-            })
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            setError(data.message || 'Conversion not available for this service');
-          } else {
-            const errorData = await response.json();
-            setError(errorData.error || 'Conversion not available');
-          }
-        } catch (fetchError) {
-          setError('Direct conversion from streaming services is not allowed due to copyright and technical restrictions.');
-        }
-        
-        setShowAlternatives(true);
-        return;
+      const service = getServiceFromUrl(url);
+      
+      // Handle different services
+      if (service === 'youtube') {
+        await handleYouTubeConversion(url);
+      } else if (service === 'spotify') {
+        await handleSpotifyConversion(url);
+      } else if (service === 'soundcloud') {
+        await handleSoundCloudConversion(url);
+      } else if (service === 'apple-music') {
+        await handleAppleMusicConversion(url);
+      } else {
+        setError('Unsupported service. Please use YouTube, Spotify, SoundCloud, or Apple Music URLs.');
       }
-
-      // If it's not a blocked domain, redirect to URL converter
-      setError('This appears to be a direct audio file URL. Please use the "Direct URL" tab for direct audio files.');
       
     } catch (error) {
       setError(`Error: ${error.message}`);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleYouTubeConversion = async (url) => {
+    try {
+      // Extract video ID
+      let videoId = '';
+      if (url.includes('youtube.com/watch?v=')) {
+        videoId = url.split('v=')[1].split('&')[0];
+      } else if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1].split('?')[0];
+      }
+
+      if (!videoId) {
+        throw new Error('Could not extract video ID from YouTube URL');
+      }
+
+      // Use a public YouTube to MP3 service
+      const conversionUrl = `https://www.yt-download.org/en/download/mp3/${videoId}`;
+      
+      // Open in new tab for download
+      window.open(conversionUrl, '_blank');
+      
+      setError('YouTube conversion opened in new tab. Please follow the download process there.');
+      
+    } catch (error) {
+      throw new Error(`YouTube conversion failed: ${error.message}`);
+    }
+  };
+
+  const handleSpotifyConversion = async (url) => {
+    try {
+      // For Spotify, we'll search YouTube for the same track
+      const trackId = url.split('track/')[1]?.split('?')[0];
+      
+      if (!trackId) {
+        throw new Error('Could not extract track ID from Spotify URL');
+      }
+
+      // Get track info first
+      await fetchMetadata();
+      
+      if (metadata) {
+        // Search YouTube for the track
+        const searchQuery = encodeURIComponent(`${metadata.title} ${metadata.author}`);
+        const youtubeSearchUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
+        
+        window.open(youtubeSearchUrl, '_blank');
+        setError('Spotify track found! A YouTube search has been opened. Find the track and use the YouTube conversion method.');
+      } else {
+        setError('Could not get track information. Please try getting track info first.');
+      }
+      
+    } catch (error) {
+      throw new Error(`Spotify conversion failed: ${error.message}`);
+    }
+  };
+
+  const handleSoundCloudConversion = async (url) => {
+    try {
+      // For SoundCloud, try to get the track info and provide download options
+      await fetchMetadata();
+      
+      if (metadata) {
+        // Use a SoundCloud downloader service
+        const downloadUrl = `https://www.soundcloud-downloader.com/?url=${encodeURIComponent(url)}`;
+        window.open(downloadUrl, '_blank');
+        setError('SoundCloud conversion opened in new tab. Please follow the download process there.');
+      } else {
+        setError('Could not get track information. Please try getting track info first.');
+      }
+      
+    } catch (error) {
+      throw new Error(`SoundCloud conversion failed: ${error.message}`);
+    }
+  };
+
+  const handleAppleMusicConversion = async (url) => {
+    try {
+      // For Apple Music, search for the track on other platforms
+      await fetchMetadata();
+      
+      if (metadata) {
+        // Search YouTube for the track
+        const searchQuery = encodeURIComponent(`${metadata.title} ${metadata.author}`);
+        const youtubeSearchUrl = `https://www.youtube.com/results?search_query=${searchQuery}`;
+        
+        window.open(youtubeSearchUrl, '_blank');
+        setError('Apple Music track found! A YouTube search has been opened. Find the track and use the YouTube conversion method.');
+      } else {
+        setError('Could not get track information. Please try getting track info first.');
+      }
+      
+    } catch (error) {
+      throw new Error(`Apple Music conversion failed: ${error.message}`);
     }
   };
 
@@ -202,8 +279,19 @@ export function StreamingConverter({ onResult }) {
           disabled={!canConvert}
           className="convert-button"
         >
-          Convert to AIFF
+          Convert to Audio
         </button>
+      </div>
+
+      <div className="conversion-info">
+        <h4>How it works:</h4>
+        <ul>
+          <li><strong>YouTube:</strong> Opens a download page in a new tab</li>
+          <li><strong>Spotify:</strong> Searches YouTube for the same track</li>
+          <li><strong>SoundCloud:</strong> Opens a SoundCloud downloader</li>
+          <li><strong>Apple Music:</strong> Searches YouTube for the same track</li>
+        </ul>
+        <p><em>Note: This opens external services in new tabs. Follow their download process to get your audio file.</em></p>
       </div>
 
       {showAlternatives && (

@@ -171,6 +171,37 @@
   cursor: not-allowed;
 }
 
+.conversion-info {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background-color: #e8f5e8;
+  border: 1px solid #c3e6c3;
+  border-radius: 8px;
+}
+
+.conversion-info h4 {
+  margin: 0 0 1rem 0;
+  color: #2e7d32;
+  font-size: 1.1rem;
+}
+
+.conversion-info ul {
+  margin: 0 0 1rem 0;
+  padding-left: 1.5rem;
+  color: #2e7d32;
+}
+
+.conversion-info li {
+  margin-bottom: 0.5rem;
+}
+
+.conversion-info p {
+  margin: 0;
+  color: #2e7d32;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
 .alternatives-section {
   margin: 2rem 0;
   padding: 1.5rem;
